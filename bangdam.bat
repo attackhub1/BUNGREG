@@ -1,4 +1,3 @@
-```bat
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
@@ -412,4 +411,3 @@ echo.
 
 pause
 exit /b 1
-```
