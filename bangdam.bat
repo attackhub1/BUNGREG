@@ -1,12 +1,20 @@
+```bat
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
 chcp 65001 >nul
 title BUNGDUM x RUNIN ^| BANGDAM SHOP
 color 07
-mode con: cols=110 lines=48
 
 if "%~1"=="SELECT_MENU" goto SELECT_MENU
+
+mode con: cols=90 lines=48
+
+rem ============================================================
+rem CENTER CURRENT CMD WINDOW
+rem ============================================================
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$sig='[DllImport(\"kernel32.dll\")] public static extern IntPtr GetConsoleWindow(); [DllImport(\"user32.dll\")] public static extern bool GetWindowRect(IntPtr h,out RECT r); [DllImport(\"user32.dll\")] public static extern bool MoveWindow(IntPtr h,int x,int y,int w,int h2,bool r); public struct RECT{public int Left;public int Top;public int Right;public int Bottom;}'; Add-Type -MemberDefinition $sig -Name Win32 -Namespace Center; $h=[Center.Win32]::GetConsoleWindow(); $r=New-Object Center.Win32+RECT; [Center.Win32]::GetWindowRect($h,[ref]$r); $w=$r.Right-$r.Left; $hh=$r.Bottom-$r.Top; $sw=[System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea; $x=($sw.Width-$w)/2; $y=($sw.Height-$hh)/2; [Center.Win32]::MoveWindow($h,[int]$x,[int]$y,$w,$hh,$true)" >nul 2>&1
 
 cls
 echo.
@@ -67,6 +75,7 @@ echo.
 timeout /t 2 /nobreak >nul
 goto KEY
 
+
 :KEY_OK
 
 cls
@@ -125,7 +134,7 @@ echo  [REG] Creating temporary registry file...
 >>"%REGFILE%" echo "GameDVR_Enabled"=dword:00000000
 >>"%REGFILE%" echo "GameDVR_FSEBehaviorMode"=dword:00000002
 >>"%REGFILE%" echo "GameDVR_HonorUserFSEBehaviorMode"=dword:00000001
->>"%REGFILE%" echo "GameDVR_DXGIHonorFSEBehaviorMode"=dword:00000001
+>>"%REGFILE%" echo "GameDVR_DXGIHonorUserFSEBehaviorMode"=dword:00000001
 >>"%REGFILE%" echo "GameDVR_EFSEFeatureFlags"=dword:00000000
 >>"%REGFILE%" echo.
 
@@ -209,6 +218,7 @@ if errorlevel 1 (
 
 echo.
 echo  [REG] Removing temporary registry file...
+
 del /f /q "%REGFILE%" >nul 2>&1
 
 if exist "%REGFILE%" (
@@ -232,7 +242,7 @@ echo.
 
 timeout /t 2 /nobreak >nul
 
-rem เปิด CMD ใหม่สำหรับหน้าเลือก Emulator
+rem เปิด CMD ใหม่เป็นหน้าเลือก Emulator
 start "BUNGDUM x RUNIN" cmd /k ""%~f0" SELECT_MENU"
 exit /b
 
@@ -242,27 +252,31 @@ exit /b
 chcp 65001 >nul
 title BUNGDUM x RUNIN ^| SELECT EMULATOR
 color 07
-mode con: cols=90 lines=30
+mode con: cols=70 lines=24
+
+rem ============================================================
+rem CENTER SELECT MENU CMD
+rem ============================================================
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.Windows.Forms; Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public class Win32{[DllImport(\"kernel32.dll\")]public static extern IntPtr GetConsoleWindow();[DllImport(\"user32.dll\")]public static extern bool GetWindowRect(IntPtr h,out RECT r);[DllImport(\"user32.dll\")]public static extern bool MoveWindow(IntPtr h,int x,int y,int w,int h2,bool r);} public struct RECT{public int Left;public int Top;public int Right;public int Bottom;}' ; $h=[Win32]::GetConsoleWindow(); $r=New-Object RECT; [Win32]::GetWindowRect($h,[ref]$r); $w=$r.Right-$r.Left; $hh=$r.Bottom-$r.Top; $a=[System.Windows.Forms.Screen]::PrimaryScreen.WorkingArea; [Win32]::MoveWindow($h,[int](($a.Width-$w)/2),[int](($a.Height-$hh)/2),$w,$hh,$true)" >nul 2>&1
 
 cls
 echo.
 echo        ============================================================
 echo.
-echo                         BUNGDUM x RUNIN
-echo                           BANGDAM SHOP
+echo                     BUNGDUM x RUNIN
+echo                       BANGDAM SHOP
 echo.
 echo        ============================================================
 echo.
+echo                       SELECT EMULATOR
 echo.
-echo                     SELECT EMULATOR
 echo.
+echo                    [1]  BlueStacks
 echo.
-echo                     [1]  BlueStacks
+echo                    [2]  BlueStacks MSI
 echo.
-echo                     [2]  BlueStacks MSI
-echo.
-echo                     [0]  Exit
-echo.
+echo                    [0]  Exit
 echo.
 echo        ============================================================
 echo.
@@ -285,7 +299,7 @@ goto SELECT_MENU
 cls
 echo.
 echo        ============================================================
-echo                           BLUESTACKS
+echo                         BLUESTACKS
 echo        ============================================================
 echo.
 echo             [SCAN] Searching for HD-Player.exe...
@@ -398,3 +412,4 @@ echo.
 
 pause
 exit /b 1
+```
