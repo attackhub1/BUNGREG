@@ -6,6 +6,8 @@ title BUNGDUM x RUNIN ^| BANGDAM SHOP
 color 07
 mode con: cols=110 lines=48
 
+if "%~1"=="SELECT_MENU" goto SELECT_MENU
+
 cls
 echo.
 echo.
@@ -44,7 +46,6 @@ timeout /t 1 /nobreak >nul
 echo  [05] System ready............................... OK
 echo.
 
-
 :KEY
 
 echo.
@@ -65,7 +66,6 @@ echo             [X] ACCESS DENIED
 echo.
 timeout /t 2 /nobreak >nul
 goto KEY
-
 
 :KEY_OK
 
@@ -202,14 +202,13 @@ reg.exe import "%REGFILE%" >nul 2>&1
 
 if errorlevel 1 (
     echo  [X] Registry import failed.
-    echo  [INFO] Some settings may require administrator permission.
+    echo  [INFO] Run this BAT as Administrator.
 ) else (
     echo  [OK] Registry configuration imported successfully.
 )
 
 echo.
 echo  [REG] Removing temporary registry file...
-
 del /f /q "%REGFILE%" >nul 2>&1
 
 if exist "%REGFILE%" (
@@ -230,34 +229,55 @@ echo             GPU Scheduling .................. CONFIGURED
 echo             Network Settings ................ CONFIGURED
 echo             Mouse Settings .................. CONFIGURED
 echo.
+
 timeout /t 2 /nobreak >nul
 
+rem เปิด CMD ใหม่สำหรับหน้าเลือก Emulator
+start "BUNGDUM x RUNIN" cmd /k ""%~f0" SELECT_MENU"
+exit /b
 
-:SELECT
+
+:SELECT_MENU
+
+chcp 65001 >nul
+title BUNGDUM x RUNIN ^| SELECT EMULATOR
+color 07
+mode con: cols=90 lines=30
 
 cls
 echo.
 echo        ============================================================
-echo                         SELECT EMULATOR
+echo.
+echo                         BUNGDUM x RUNIN
+echo                           BANGDAM SHOP
+echo.
 echo        ============================================================
 echo.
-echo                 [1]  BlueStacks
 echo.
-echo                 [2]  BlueStacks MSI
+echo                     SELECT EMULATOR
+echo.
+echo.
+echo                     [1]  BlueStacks
+echo.
+echo                     [2]  BlueStacks MSI
+echo.
+echo                     [0]  Exit
+echo.
 echo.
 echo        ============================================================
 echo.
 
 set "CHOICE="
-set /p "CHOICE=             Select [1-2]: "
+set /p "CHOICE=             Select [0-2]: "
 
 if "%CHOICE%"=="1" goto BLUESTACKS
 if "%CHOICE%"=="2" goto MSI
+if "%CHOICE%"=="0" exit /b
 
 echo.
 echo             [X] Invalid selection.
 timeout /t 1 /nobreak >nul
-goto SELECT
+goto SELECT_MENU
 
 
 :BLUESTACKS
