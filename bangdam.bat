@@ -2,7 +2,7 @@
 setlocal EnableExtensions
 
 title BUNGDUM x RUNIN ^| BangDam Shop
-color 0C
+color 0A
 mode con: cols=100 lines=40
 
 cls
